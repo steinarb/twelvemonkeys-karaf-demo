@@ -1,33 +1,6 @@
-* Testing the twelvemonkeys-maven-plugin
+* Testing OSGi-fication of TwelveMonkeys
 
-This is a maven project that is a testbed for delivering [[https://reactjs.org][react.js]] frontends from apache karaf.
-
-The [[https://github.com/steinarb/twelvemonkeys-karaf-demo/blob/master/pom.xml#L138][maven plugin config]]:
- - uses [[https://github.com/eirslett/frontend-maven-plugin][frontend-maven-plugin]] to [[https://webpack.js.org][webpack]] a  [[https://reactjs.org][react.js]] application into a self-contained bundle.js file that can be served as a static resource. Note that this doesn't need a node.js installed when building, nor will it use any node.js/npm installed locally on the build machine.
-   The [[https://github.com/eirslett/frontend-maven-plugin][frontend-maven-plugin]] will download and upack its own node.js, and use this node.js to download the npm dependencies and create the bundle.js
- - uses [[http://felix.apache.org/components/bundle-plugin/][maven-bundle-plugin]] to create two DS OSGi components that expose the Servlet service that is plugged into an OSGi web whiteboard
-   1. The DS component ReactServlet serves the static resources index.html and bundle.js on the path "/twelvemonkeys-karaf-demo"
-   2. The DS component IncrementerServlet receives POST requests on  the path "/twelvemonkeys-karaf-demo/api/increment", parses the POSTed JSON into a bean, increments the value property of the bean, and returns the bean as a JSON object (ie. the servlet is stateless and just increments the value of the POSTed object)
- - uses [[https://karaf.apache.org/manual/latest/#_using_the_karaf_maven_plugin][karaf-maven-plugin]] to create an [[https://karaf.apache.org/manual/latest/#_features_repositories_2][apache karaf feature repository]] that loads the servlets and ensures that all runtime requirements are in place (the pax web whiteboard extender, the jackson JSON parser). The feature repository is attached to the maven bundle artifact
-
-The react application uses the following features:
- - [[https://reactjs.org][react.js]] to render the application's page
- - [[https://redux.js.org][redux]] to hold the application's state
- - [[https://redux-toolkit.js.org][Redux Toolkit]] to create redux actions and reducers (if a reducer is longer than a single line per action your redux state is probably organized wrong)
- - [[https://redux-saga.js.org][redux-saga]] and [[https://github.com/axios/axios][axios]] for REST API communication and asynchronous update of the application's state
- - [[https://reacttraining.com/react-router/][react-router]] to route between different pages (however this requires hardcoding the ReactServlet's path into the react app, and requires the ReactServlet to return the top level index.html from all routes)
-
-The react application follows the structure I've found clear and easy to work with:
- - Avoid embedding binaries like images or fonts in the bundle.js, it's better to load them from a web resource
- - Avoid embedding large CSS files like e.g. bootstrap in bundle.js, again: it's better to load them from a web resource
- - The build script and package.json in the top directory with the application in a subdirectory named =src/=
- - Inside =src/=
-   - On the top, index.js that enters the application and sets up and starts redux and saga
-   - actiontypes.js containing all of the redux actions in the applcation, created using redux toolkit's "[[https://redux-toolkit.js.org/api/createAction][createAction()]]"
-   - Subdirectory =components/= containing all of the visible UI components of the frontend app
-     - Note in particular Counter.js which demonstrates both displaying data from redux and dispatching actions with redux
-   - Subdirectory =reducers/= containing all of the reducers (created with redux toolkit "[[https://redux-toolkit.js.org/api/createReducer#usage-with-the-map-object-notation][createReducer()]] using the map notation, and using "computed syntax" (i.e. square brackets on property identifiers), to be able to use the createAction() actions directly
-   - Subdirectory =sagas/= containing the sagas that handle asynchronous REST API communication (a REST operation is triggered by dispatching a redux action that is picked up by the saga, and both successful and failed REST responses results in redux actions, that in turn are picked up by reducers and stored in the reduc state
+This is a fork of [[https://github.com/steinarb/frontend-karaf-demo][frontend-maven-plugin]] used to test the OSGi-fication of [[https://github.com/haraldk/TwelveMonkeys][TwelveMonkeys]].
 
 ** Status
 

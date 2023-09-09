@@ -16,7 +16,7 @@ class IncrementerServletTest {
         String valueAsJson = IncrementerServlet.mapper.writeValueAsString(value);
         MockHttpServletRequest request = new MockHttpServletRequest()
             .setMethod("POST")
-            .setRequestURI("http://localhost:8181/frontend-karaf-demo/api/increment")
+            .setRequestURI("http://localhost:8181/twelvemonkeys-karaf-demo/api/increment")
             .setPathInfo("/")
             .setBodyContent(valueAsJson);
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -37,7 +37,7 @@ class IncrementerServletTest {
         String valueAsJson = IncrementerServlet.mapper.writeValueAsString(value);
         MockHttpServletRequest request = new MockHttpServletRequest()
             .setMethod("POST")
-            .setRequestURI("http://localhost:8181/frontend-karaf-demo/api/increment")
+            .setRequestURI("http://localhost:8181/twelvemonkeys-karaf-demo/api/increment")
             .setPathInfo("/")
             .setBodyContent(valueAsJson);
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -58,7 +58,7 @@ class IncrementerServletTest {
         String valueNotJson = "<this>is <not>json</not></this>";
         MockHttpServletRequest request = new MockHttpServletRequest()
             .setMethod("POST")
-            .setRequestURI("http://localhost:8181/frontend-karaf-demo/api/increment")
+            .setRequestURI("http://localhost:8181/twelvemonkeys-karaf-demo/api/increment")
             .setPathInfo("/")
             .setBodyContent(valueNotJson);
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -81,7 +81,7 @@ class IncrementerServletTest {
         String valueAsJson = "{ \"currentValue\": 0, \"delta\": -1 }";
         MockHttpServletRequest request = new MockHttpServletRequest()
             .setMethod("POST")
-            .setRequestURI("http://localhost:8181/frontend-karaf-demo/api/increment")
+            .setRequestURI("http://localhost:8181/twelvemonkeysx-karaf-demo/api/increment")
             .setPathInfo("/")
             .setBodyContent(valueAsJson);
         MockHttpServletResponse response = new MockHttpServletResponse();

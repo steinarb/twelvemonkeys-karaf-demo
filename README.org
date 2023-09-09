@@ -1,13 +1,13 @@
-* Testing the frontend-maven-plugin
+* Testing the twelvemonkeys-maven-plugin
 
 This is a maven project that is a testbed for delivering [[https://reactjs.org][react.js]] frontends from apache karaf.
 
-The [[https://github.com/steinarb/frontend-karaf-demo/blob/master/pom.xml#L138][maven plugin config]]:
+The [[https://github.com/steinarb/twelvemonkeys-karaf-demo/blob/master/pom.xml#L138][maven plugin config]]:
  - uses [[https://github.com/eirslett/frontend-maven-plugin][frontend-maven-plugin]] to [[https://webpack.js.org][webpack]] a  [[https://reactjs.org][react.js]] application into a self-contained bundle.js file that can be served as a static resource. Note that this doesn't need a node.js installed when building, nor will it use any node.js/npm installed locally on the build machine.
    The [[https://github.com/eirslett/frontend-maven-plugin][frontend-maven-plugin]] will download and upack its own node.js, and use this node.js to download the npm dependencies and create the bundle.js
  - uses [[http://felix.apache.org/components/bundle-plugin/][maven-bundle-plugin]] to create two DS OSGi components that expose the Servlet service that is plugged into an OSGi web whiteboard
-   1. The DS component ReactServlet serves the static resources index.html and bundle.js on the path "/frontend-karaf-demo"
-   2. The DS component IncrementerServlet receives POST requests on  the path "/frontend-karaf-demo/api/increment", parses the POSTed JSON into a bean, increments the value property of the bean, and returns the bean as a JSON object (ie. the servlet is stateless and just increments the value of the POSTed object)
+   1. The DS component ReactServlet serves the static resources index.html and bundle.js on the path "/twelvemonkeys-karaf-demo"
+   2. The DS component IncrementerServlet receives POST requests on  the path "/twelvemonkeys-karaf-demo/api/increment", parses the POSTed JSON into a bean, increments the value property of the bean, and returns the bean as a JSON object (ie. the servlet is stateless and just increments the value of the POSTed object)
  - uses [[https://karaf.apache.org/manual/latest/#_using_the_karaf_maven_plugin][karaf-maven-plugin]] to create an [[https://karaf.apache.org/manual/latest/#_features_repositories_2][apache karaf feature repository]] that loads the servlets and ensures that all runtime requirements are in place (the pax web whiteboard extender, the jackson JSON parser). The feature repository is attached to the maven bundle artifact
 
 The react application uses the following features:
@@ -31,23 +31,23 @@ The react application follows the structure I've found clear and easy to work wi
 
 ** Status
 
-[[https://github.com/steinarb/frontend-karaf-demo/actions/workflows/frontend-karaf-demo-maven-ci-build.yml][file:https://github.com/steinarb/frontend-karaf-demo/actions/workflows/frontend-karaf-demo-maven-ci-build.yml/badge.svg]]
-[[https://coveralls.io/github/steinarb/frontend-karaf-demo][file:https://coveralls.io/repos/github/steinarb/frontend-karaf-demo/badge.svg]]
-[[https://sonarcloud.io/summary/new_code?id=steinarb_frontend-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_frontend-karaf-demo&metric=alert_status#.svg]]
-[[https://maven-badges.herokuapp.com/maven-central/no.priv.bang.demos/frontend-karaf-demo][file:https://maven-badges.herokuapp.com/maven-central/no.priv.bang.demos/frontend-karaf-demo/badge.svg]]
+[[https://github.com/steinarb/twelvemonkeys-karaf-demo/actions/workflows/twelvemonkeys-karaf-demo-maven-ci-build.yml][file:https://github.com/steinarb/twelvemonkeys-karaf-demo/actions/workflows/twelvemonkeys-karaf-demo-maven-ci-build.yml/badge.svg]]
+[[https://coveralls.io/github/steinarb/twelvemonkeys-karaf-demo][file:https://coveralls.io/repos/github/steinarb/twelvemonkeys-karaf-demo/badge.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_twelvemonkeys-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_twelvemonkeys-karaf-demo&metric=alert_status#.svg]]
+[[https://maven-badges.herokuapp.com/maven-central/no.priv.bang.demos/twelvemonkeys-karaf-demo][file:https://maven-badges.herokuapp.com/maven-central/no.priv.bang.demos/twelvemonkeys-karaf-demo/badge.svg]]
 
-[[https://sonarcloud.io/summary/new_code?id=steinarb_frontend-karaf-demo][file:https://sonarcloud.io/images/project_badges/sonarcloud-white.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_twelvemonkeys-karaf-demo][file:https://sonarcloud.io/images/project_badges/sonarcloud-white.svg]]
 
-[[https://sonarcloud.io/summary/new_code?id=steinarb_frontend-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_frontend-karaf-demo&metric=sqale_index#.svg]]
-[[https://sonarcloud.io/summary/new_code?id=steinarb_frontend-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_frontend-karaf-demo&metric=coverage#.svg]]
-[[https://sonarcloud.io/summary/new_code?id=steinarb_frontend-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_frontend-karaf-demo&metric=ncloc#.svg]]
-[[https://sonarcloud.io/summary/new_code?id=steinarb_frontend-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_frontend-karaf-demo&metric=code_smells#.svg]]
-[[https://sonarcloud.io/summary/new_code?id=steinarb_frontend-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_frontend-karaf-demo&metric=sqale_rating#.svg]]
-[[https://sonarcloud.io/summary/new_code?id=steinarb_frontend-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_frontend-karaf-demo&metric=security_rating#.svg]]
-[[https://sonarcloud.io/summary/new_code?id=steinarb_frontend-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_frontend-karaf-demo&metric=bugs#.svg]]
-[[https://sonarcloud.io/summary/new_code?id=steinarb_frontend-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_frontend-karaf-demo&metric=vulnerabilities#.svg]]
-[[https://sonarcloud.io/summary/new_code?id=steinarb_frontend-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_frontend-karaf-demo&metric=duplicated_lines_density#.svg]]
-[[https://sonarcloud.io/summary/new_code?id=steinarb_frontend-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_frontend-karaf-demo&metric=reliability_rating#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_twelvemonkeys-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_twelvemonkeys-karaf-demo&metric=sqale_index#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_twelvemonkeys-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_twelvemonkeys-karaf-demo&metric=coverage#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_twelvemonkeys-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_twelvemonkeys-karaf-demo&metric=ncloc#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_twelvemonkeys-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_twelvemonkeys-karaf-demo&metric=code_smells#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_twelvemonkeys-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_twelvemonkeys-karaf-demo&metric=sqale_rating#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_twelvemonkeys-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_twelvemonkeys-karaf-demo&metric=security_rating#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_twelvemonkeys-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_twelvemonkeys-karaf-demo&metric=bugs#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_twelvemonkeys-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_twelvemonkeys-karaf-demo&metric=vulnerabilities#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_twelvemonkeys-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_twelvemonkeys-karaf-demo&metric=duplicated_lines_density#.svg]]
+[[https://sonarcloud.io/summary/new_code?id=steinarb_twelvemonkeys-karaf-demo][file:https://sonarcloud.io/api/project_badges/measure?project=steinarb_twelvemonkeys-karaf-demo&metric=reliability_rating#.svg]]
 
 *** Branches
 
@@ -63,17 +63,17 @@ Installation steps:
     #+BEGIN_EXAMPLE
       mkdir -p ~/git
       cd ~/git/
-      git clone https://github.com/steinarb/frontend-karaf-demo.git
-      cd ~/git/frontend-karaf-demo/
+      git clone https://github.com/steinarb/twelvemonkeys-karaf-demo.git
+      cd ~/git/twelvemonkeys-karaf-demo/
       mvn clean install
     #+END_EXAMPLE
  2. Install apache karaf (e.g. [[https://karaf.apache.org/manual/latest/quick-start.html][according to the karaf quick start guide]] or by [[https://steinar.bang.priv.no/2018/01/23/packaging-karaf-with-native-debian-packaging-tools/][installing the .deb package on debian/ubuntu/raspbian]]), and start karaf
  3. From the karaf console (either from the karaf started above, or from an SSH session into a running karaf), install the application with the following commands:
     #+BEGIN_EXAMPLE
-      feature:repo-add mvn:no.priv.bang.demos/frontend-karaf-demo/LATEST/xml/features
-      feature:install frontend-karaf-demo
+      feature:repo-add mvn:no.priv.bang.demos/twelvemonkeys-karaf-demo/LATEST/xml/features
+      feature:install twelvemonkeys-karaf-demo
     #+END_EXAMPLE
- 4. Open a web browser on http://localhost:8181/frontend-karaf-demo/ and use the "+" and "-" buttons to increment and decrement the counter
+ 4. Open a web browser on http://localhost:8181/twelvemonkeys-karaf-demo/ and use the "+" and "-" buttons to increment and decrement the counter
     - If using Chrome or Chromium it's a good idea to press Ctrl-Shift-i to open the developer tools, where it is possible to watch error messages in the console, and set breakpoints and debug the JavaScript code
     - It's also a good idea to visit the [[https://chrome.google.com/webstore/category/extensions][Chrome Web Store]] and install:
       1. [[https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi][React Developer Tools]] from Facebook

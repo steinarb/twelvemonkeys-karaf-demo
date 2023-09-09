@@ -15,8 +15,8 @@ import no.priv.bang.servlet.frontend.FrontendServlet;
 
 
 @Component(service={Servlet.class})
-@HttpWhiteboardContextSelect("(" + HTTP_WHITEBOARD_CONTEXT_NAME + "=frontend-demo)")
-@HttpWhiteboardServletName("frontend-demo")
+@HttpWhiteboardContextSelect("(" + HTTP_WHITEBOARD_CONTEXT_NAME + "=twelvemonkeys-demo)")
+@HttpWhiteboardServletName("twelvemonkeys-demo")
 @HttpWhiteboardServletPattern("/*")
 public class ReactServlet extends FrontendServlet {
     private static final long serialVersionUID = 250817058831319271L;

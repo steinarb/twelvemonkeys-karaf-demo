@@ -22,8 +22,8 @@ class ReactServletTest {
         MockLogService logservice = new MockLogService();
         MockHttpServletRequest request = new MockHttpServletRequest()
             .setMethod("GET")
-            .setRequestURL("http://localhost:8181/frontend-karaf-demo")
-            .setRequestURI("http://localhost:8181/frontend-karaf-demo/")
+            .setRequestURL("http://localhost:8181/twelvemonkeys-karaf-demo")
+            .setRequestURI("http://localhost:8181/twelvemonkeys-karaf-demo/")
             .setPathInfo("/");
         MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -42,9 +42,9 @@ class ReactServletTest {
         MockLogService logservice = new MockLogService();
         MockHttpServletRequest request = new MockHttpServletRequest()
             .setMethod("GET")
-            .setRequestURL("http://localhost:8181/frontend-karaf-demo")
-            .setRequestURI("http://localhost:8181/frontend-karaf-demo")
-            .setServletPath("/frontend-karaf-demo");
+            .setRequestURL("http://localhost:8181/twelvemonkeys-karaf-demo")
+            .setRequestURI("http://localhost:8181/twelvemonkeys-karaf-demo")
+            .setServletPath("/twelvemonkeys-karaf-demo");
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         ReactServlet servlet = new ReactServlet();
@@ -60,8 +60,8 @@ class ReactServletTest {
         MockLogService logservice = new MockLogService();
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
-        when(request.getRequestURL()).thenReturn(new StringBuffer("http://localhost:8181/frontend-karaf-demo"));
-        when(request.getRequestURI()).thenReturn("http://localhost:8181/frontend-karaf-demo/");
+        when(request.getRequestURL()).thenReturn(new StringBuffer("http://localhost:8181/twelvemonkeys-karaf-demo"));
+        when(request.getRequestURI()).thenReturn("http://localhost:8181/twelvemonkeys-karaf-demo/");
         when(request.getPathInfo()).thenReturn("/");
         MockHttpServletResponse response = spy(MockHttpServletResponse.class);
         ServletOutputStream streamThrowingIOException = mock(ServletOutputStream.class);
@@ -81,8 +81,8 @@ class ReactServletTest {
         MockLogService logservice = new MockLogService();
         MockHttpServletRequest request = new MockHttpServletRequest()
             .setMethod("GET")
-            .setRequestURL("http://localhost:8181/frontend-karaf-demo")
-            .setRequestURI("http://localhost:8181/frontend-karaf-demo/")
+            .setRequestURL("http://localhost:8181/twelvemonkeys-karaf-demo")
+            .setRequestURI("http://localhost:8181/twelvemonkeys-karaf-demo/")
             .setPathInfo("/");
         MockHttpServletResponse response = spy(MockHttpServletResponse.class);
         when(response.getOutputStream()).thenThrow(IOException.class);
@@ -100,8 +100,8 @@ class ReactServletTest {
         MockLogService logservice = new MockLogService();
         MockHttpServletRequest request = new MockHttpServletRequest()
             .setMethod("GET")
-            .setRequestURL("http://localhost:8181/frontend-karaf-demo/static/nosuchname.png")
-            .setRequestURI("http://localhost:8181/frontend-karaf-demo/static/nosuchname.png")
+            .setRequestURL("http://localhost:8181/twelvemonkeys-karaf-demo/static/nosuchname.png")
+            .setRequestURI("http://localhost:8181/twelvemonkeys-karaf-demo/static/nosuchname.png")
             .setPathInfo("/static/nosuchname.png");
         MockHttpServletResponse response = new MockHttpServletResponse();
 

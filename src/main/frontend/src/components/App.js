@@ -10,7 +10,7 @@ import createRootReducer from '../reducers';
 import rootSaga from '../sagas/';
 import Home from './Home';
 import About from './About';
-import Counter from './Counter';
+import Metadata from './Metadata';
 
 
 const baseUrl = Array.from(document.scripts).map(s => s.src).filter(src => src.includes('bundle.js'))[0].replace('/bundle.js', '');
@@ -34,13 +34,13 @@ function App() {
                 <div className="App">
                     <div className="container">
                         <NavLink to="/"><button>Home</button></NavLink>
-                        <NavLink to="/counter"><button>Counter</button></NavLink>
+                        <NavLink to="/metadata"><button>Metadata</button></NavLink>
                         <NavLink to="/about"><button>About</button></NavLink>
                         <hr/>
                     </div>
                     <Routes>
                         <Route exact path="/" element={<Home/>} />
-                        <Route path="/counter" element={<Counter/>} />
+                        <Route path="/metadata" element={<Metadata/>} />
                         <Route path="/about" element={<About/>} />
                     </Routes>
                 </div>

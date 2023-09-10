@@ -1,10 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit';
 import {
-    DELTA_MODIFY,
+    MODIFY_IMAGE_URL,
 } from '../reduxactions';
 
-const deltaReducer = createReducer(1, {
-    [DELTA_MODIFY]: (state, action) => parseInt(action.payload) || 0,
+const imageUrlReducer = createReducer('', {
+    [MODIFY_IMAGE_URL]: (state, action) => action.payload,
 });
 
-export default deltaReducer;
+export default imageUrlReducer;

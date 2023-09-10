@@ -1,27 +1,26 @@
 import { takeLatest, call, put, select } from "redux-saga/effects";
 import axios from "axios";
 import {
-    INCREMENT_REQUEST,
-    INCREMENT_RECEIVE,
-    INCREMENT_FAILURE,
+    IMAGE_METADATA_REQUEST,
+    IMAGE_METADATA_RECEIVE,
+    IMAGE_METADATA_FAILURE,
 } from '../reduxactions';
 
-function doIncrement(value, delta) {
-    return axios.post('/api/increment', { value, delta });
+function doMetadata(url) {
+    return axios.post('/api/image/metadata', { url });
 }
 
-function* sendReceiveIncrement() {
+function* sendReceiveMetadata() {
     try {
-        const delta = yield select(state => state.delta);
-        const currentValue = yield select(state => state.counter);
-        const response = yield call(doIncrement, currentValue, delta);
-        const incrementedCounter = response.data;
-        yield put(INCREMENT_RECEIVE(incrementedCounter.value));
+        const url = yield select(state => state.imageUrl);
+        const response = yield call(doMetadata, url);
+        const metadata = response.data;
+        yield put(IMAGE_METADATA_RECEIVE(metadata));
     } catch (error) {
-        yield put(INCREMENT_FAILURE(error));
+        yield put(IMAGE_METADATA_FAILURE(error));
     }
 }
 
-export default function* incrementSaga() {
-    yield takeLatest(INCREMENT_REQUEST, sendReceiveIncrement);
+export default function* metadataSaga() {
+    yield takeLatest(IMAGE_METADATA_REQUEST, sendReceiveMetadata);
 }

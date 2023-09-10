@@ -1,44 +1,35 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
-    DELTA_MODIFY,
-    INCREMENT_REQUEST,
-    DECREMENT_REQUEST,
+    MODIFY_IMAGE_URL,
+    IMAGE_METADATA_REQUEST,
 } from '../reduxactions';
 
 
-function Counter(props) {
-    const {delta, counter, onDeltaModify, onIncrement, onDecrement} = props;
+export default function Metadata() {
+    const imageUrl = useSelector(state => state.imageUrl);
+    const status = useSelector(state => state.status);
+    const lastModified = useSelector(state => state.lastModified);
+    const contentType = useSelector(state => state.contentType);
+    const contentLength = useSelector(state => state.contentLength);
+    const message = useSelector(state => state.message);
+    const dispatch = useDispatch();
 
     return (
         <div>
-            <h1>Counting high and low</h1>
+            <h1>Get image metadata</h1>
             <p>
-                Increment step:
-                <input id="delta" type="text" value={delta} onChange={onDeltaModify} />
+                Image URL:
+                <input id="imageUrl" type="text" value={imageUrl} onChange={e => dispatch(MODIFY_IMAGE_URL(e.target.value))} />
             </p>
             <p>
-                {counter}
-                <button onClick={onIncrement}>+</button>
-                <button onClick={onDecrement}>-</button>
+                <button onClick={() => dispatch(IMAGE_METADATA_REQUEST())}>Get metadata</button>
             </p>
+            <p>Status code: <input id="status" type="text" value={status} /></p>
+            <p>Last modified: <input id="lastModified" type="text" value={lastModified} /></p>
+            <p>Content type: <input id="contentType" type="text" value={contentType} /></p>
+            <p>Content length: <input id="contentLength" type="text" value={contentLength} /></p>
+            <p>Message: <input id="message" type="text" value={message} /></p>
         </div>
     );
 }
-
-function mapStateToProps(state) {
-    return {
-        delta: state.delta,
-        counter: state.counter,
-    };
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        onDeltaModify: e => dispatch(DELTA_MODIFY(e.target.value)),
-        onIncrement: () => dispatch(INCREMENT_REQUEST()),
-        onDecrement: () => dispatch(DECREMENT_REQUEST()),
-    };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Counter);

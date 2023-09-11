@@ -12,7 +12,7 @@ export default function Metadata() {
     const lastModified = useSelector(state => state.lastModified);
     const contentType = useSelector(state => state.contentType);
     const contentLength = useSelector(state => state.contentLength);
-    const message = useSelector(state => state.message);
+    const comment = useSelector(state => state.comment);
     const dispatch = useDispatch();
 
     return (
@@ -29,7 +29,7 @@ export default function Metadata() {
             <p>Last modified: <input id="lastModified" type="text" value={lastModified} /></p>
             <p>Content type: <input id="contentType" type="text" value={contentType} /></p>
             <p>Content length: <input id="contentLength" type="text" value={contentLength} /></p>
-            <p>Message: <input id="message" type="text" value={message} /></p>
+            <p>Comment: <input id="comment" type="text" value={comment} /></p>
         </div>
     );
 }

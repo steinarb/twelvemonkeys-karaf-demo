@@ -9,6 +9,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <twelvemonkeys.version>3.10.0-SNAPSHOT</twelvemonkeys.version>
         <maven.bundle.plugin.version>5.1.9</maven.bundle.plugin.version>
         <karaf.version>4.4.3</karaf.version>
         <karaf-feature-name>${project.artifactId}</karaf-feature-name>
@@ -24,6 +25,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.twelvemonkeys.bom</groupId>
+                <artifactId>bom</artifactId>
+                <version>${twelvemonkeys.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.apache.karaf</groupId>
                 <artifactId>karaf-bom</artifactId>
@@ -70,6 +78,43 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.aries.spifly</groupId>
+            <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
+            <version>1.3.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.common</groupId>
+            <artifactId>common-image</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.common</groupId>
+            <artifactId>common-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.common</groupId>
+            <artifactId>common-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-metadata</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-psd</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-jpeg</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-tiff</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.core</artifactId>
@@ -338,6 +383,10 @@
                     </supportedProjectTypes>
                     <instructions>
                         <Bundle-SymbolicName>${Bundle-SymbolicName}</Bundle-SymbolicName>
+                        <Require-Capability>
+                            osgi.extender; filter:="(osgi.extender=osgi.serviceloader.processor)",
+                            osgi.serviceloader; filter:="(osgi.serviceloader=javax.imageio.spi.IIOServiceProvider)"; cardinality:=multiple,
+                        </Require-Capability>
                         <Import-Package>
                             org.osgi.service.http.context;version="[1,2)",
                             org.osgi.service.log;version="[1.4,2)",

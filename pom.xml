@@ -385,7 +385,7 @@
                         <Bundle-SymbolicName>${Bundle-SymbolicName}</Bundle-SymbolicName>
                         <Require-Capability>
                             osgi.extender; filter:="(osgi.extender=osgi.serviceloader.processor)",
-                            osgi.serviceloader; filter:="(osgi.serviceloader=javax.imageio.spi.IIOServiceProvider)"; cardinality:=multiple,
+                            osgi.serviceloader; filter:="(osgi.serviceloader=javax.imageio.spi.ImageReaderSpi)"; cardinality:=multiple,
                         </Require-Capability>
                         <Import-Package>
                             org.osgi.service.http.context;version="[1,2)",

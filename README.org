@@ -31,8 +31,12 @@ This is a fork of [[https://github.com/steinarb/frontend-karaf-demo][frontend-ma
 
 ** Installation on apache karaf
 
+Requirements:
+ 1. Java 17 JDK installed
+ 2. the apache maven build tool installed
+
 Installation steps:
- 1. Clone this project and build it:
+ 1. Clone this project and build it with maven:
     #+BEGIN_EXAMPLE
       mkdir -p ~/git
       cd ~/git/
@@ -40,7 +44,11 @@ Installation steps:
       cd ~/git/twelvemonkeys-karaf-demo/
       mvn clean install
     #+END_EXAMPLE
- 2. Install apache karaf (e.g. [[https://karaf.apache.org/manual/latest/quick-start.html][according to the karaf quick start guide]] or by [[https://steinar.bang.priv.no/2018/01/23/packaging-karaf-with-native-debian-packaging-tools/][installing the .deb package on debian/ubuntu/raspbian]]), and start karaf
+ 2. Install apache karaf (e.g. [[https://karaf.apache.org/manual/latest/quick-start.html][according to the karaf quick start guide]] or by [[https://steinar.bang.priv.no/2018/01/23/packaging-karaf-with-native-debian-packaging-tools/][installing the .deb package on debian/ubuntu/raspbian]]), and start karaf using the command
+    #+begin_example
+      ./bin/karaf debug
+    #+end_example
+    (the debug argument makes karaf listen for remote debugging on port 5005)
  3. From the karaf console (either from the karaf started above, or from an SSH session into a running karaf), install the application with the following commands:
     #+BEGIN_EXAMPLE
       feature:repo-add mvn:no.priv.bang.demos/twelvemonkeys-karaf-demo/LATEST/xml/features
@@ -53,6 +61,17 @@ Installation steps:
          - The "React" tab in chrome devtools gives a view of the react application tree, rather than the DOM, where it is possible to examine the react components' props and state, it's also possible to click on a part of the application and navigate to the corret place in the react application tree
       2. [[https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd][Redux DevTools]] from remotedevio
          - The "Redux" tab in chrome devtools lets you examine the redux store of the application
+
+*** Remote debugging of the application
+
+Requires that you have an IDE like Eclipse or IntelliJ IDEA.
+
+Do the following:
+ 1. Import the cloned twelvemonkeys-karaf-demo maven project into the IDE
+ 2. Create a remote debug config that uses port 5005 and uses source code from the twelvemonkeys-karaf-demo project
+ 3. Start debugging and set a breakpoint where the JPEG reader is found
+ 4. Try fetching metadata for a JPEG URL
+ 5. Check in the debugger what the type of the JPEG reader is, and if it is something other than com.sun.imageio.plugins.jpeg.JPEGImageReader then the chance is that you've got the SPI plugin injection working
 
 ** LICENSE
 

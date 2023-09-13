@@ -41,7 +41,7 @@ public class ImageServiceProvider implements ImageService {
                             .map(n -> n.getAttribute("value")).orElse(null);
                     }
                 } catch (IOException e) {
-                    new RuntimeException(String.format("Error when reading image metadata for %s",  imageUrl), e);
+                    throw new RuntimeException(String.format("Error when reading image metadata for %s",  imageUrl), e);
                 }
 
                 return ImageMetadata.with()
@@ -52,7 +52,7 @@ public class ImageServiceProvider implements ImageService {
                     .comment(comment)
                     .build();
             } catch (IOException e) {
-                new RuntimeException(String.format("Error when reading metadata for %s",  imageUrl), e);
+                throw new RuntimeException(String.format("Error when reading metadata for %s",  imageUrl), e);
             }
         }
         return null;

@@ -12,6 +12,9 @@ import javax.imageio.ImageIO;
 import javax.imageio.metadata.IIOMetadataNode;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.log.LogService;
+import org.osgi.service.log.Logger;
 import org.w3c.dom.NodeList;
 
 import no.priv.bang.demos.frontendkarafdemo.beans.ImageMetadata;
@@ -20,6 +23,12 @@ import no.priv.bang.demos.frontendkarafdemo.beans.ImageMetadata;
 public class ImageServiceProvider implements ImageService {
 
     private HttpConnectionFactory connectionFactory;
+    private Logger logger;
+
+    @Reference
+    public void setLogservice(LogService logservice) {
+        logger = logservice.getLogger(getClass());
+    }
 
     @Override
     public ImageMetadata getMetadata(String imageUrl) {
@@ -32,6 +41,7 @@ public class ImageServiceProvider implements ImageService {
                     var readers = ImageIO.getImageReaders(input);
                     if (readers.hasNext()) {
                         var reader = readers.next();
+                        logger.info("reader class: {}", reader.getClass().getCanonicalName());
                         reader.setInput(input, true);
                         var metadata = reader.getImageMetadata(0);
                         comment = StreamSupport.stream(iterable(metadata.getAsTree("javax_imageio_1.0").getChildNodes()).spliterator(), false)

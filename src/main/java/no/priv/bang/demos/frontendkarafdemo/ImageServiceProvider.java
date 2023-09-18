@@ -39,16 +39,20 @@ public class ImageServiceProvider implements ImageService {
                 connection.setRequestMethod("GET");
                 try(var input = ImageIO.createImageInputStream(connection.getInputStream())) {
                     var readers = ImageIO.getImageReaders(input);
-                    if (readers.hasNext()) {
+                    while (readers.hasNext()) {
                         var reader = readers.next();
-                        logger.info("reader class: {}", reader.getClass().getCanonicalName());
-                        reader.setInput(input, true);
-                        var metadata = reader.getImageMetadata(0);
-                        comment = StreamSupport.stream(iterable(metadata.getAsTree("javax_imageio_1.0").getChildNodes()).spliterator(), false)
-                            .filter(n -> "Text".equals(n.getNodeName()))
-                            .findFirst()
-                            .flatMap(n -> StreamSupport.stream(iterable(n.getChildNodes()).spliterator(), false).findFirst())
-                            .map(n -> n.getAttribute("value")).orElse(null);
+                        try {
+                            logger.info("reader class: {}", reader.getClass().getCanonicalName());
+                            reader.setInput(input, true);
+                            var metadata = reader.getImageMetadata(0);
+                            comment = StreamSupport.stream(iterable(metadata.getAsTree("javax_imageio_1.0").getChildNodes()).spliterator(), false)
+                                .filter(n -> "Text".equals(n.getNodeName()))
+                                .findFirst()
+                                .flatMap(n -> StreamSupport.stream(iterable(n.getChildNodes()).spliterator(), false).findFirst())
+                                .map(n -> n.getAttribute("value")).orElse(null);
+                        } finally {
+                            reader.dispose();
+                        }
                     }
                 } catch (IOException e) {
                     throw new RuntimeException(String.format("Error when reading image metadata for %s",  imageUrl), e);

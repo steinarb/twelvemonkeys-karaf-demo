@@ -39,7 +39,7 @@ public class ImageServiceProvider implements ImageService {
                 connection.setRequestMethod("GET");
                 try(var input = ImageIO.createImageInputStream(connection.getInputStream())) {
                     var readers = ImageIO.getImageReaders(input);
-                    while (readers.hasNext()) {
+                    if (readers.hasNext()) {
                         var reader = readers.next();
                         try {
                             logger.info("reader class: {}", reader.getClass().getCanonicalName());

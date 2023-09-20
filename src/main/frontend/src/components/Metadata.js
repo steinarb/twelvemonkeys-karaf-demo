@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
     MODIFY_IMAGE_URL,
     IMAGE_METADATA_REQUEST,
-    IMAGEIO_SCAN_FOR_PLUGINS_REQUEST,
 } from '../reduxactions';
 
 
@@ -31,9 +30,6 @@ export default function Metadata() {
             <p>Content type: <input id="contentType" type="text" value={contentType} /></p>
             <p>Content length: <input id="contentLength" type="text" value={contentLength} /></p>
             <p>Comment: <input id="comment" type="text" value={comment} /></p>
-            <p>
-                <button onClick={() => dispatch(IMAGEIO_SCAN_FOR_PLUGINS_REQUEST())}>Scan for ImageIO plugins</button>
-            </p>
         </div>
     );
 }

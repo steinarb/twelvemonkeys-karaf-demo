@@ -5,13 +5,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
 import javax.imageio.metadata.IIOMetadataNode;
 
 import org.osgi.service.component.annotations.Component;
@@ -31,13 +28,6 @@ public class ImageServiceProvider implements ImageService {
     @Reference
     public void setLogservice(LogService logservice) {
         logger = logservice.getLogger(getClass());
-    }
-
-    @Override
-    public List<String> scanForImageioPlugins() {
-        ImageIO.scanForPlugins();
-        Iterable<ImageReader> jpegreaders = () -> ImageIO.getImageReadersBySuffix("jpg");
-        return StreamSupport.stream(jpegreaders.spliterator(), false).map(r -> r.getClass().getCanonicalName()).collect(Collectors.toList());
     }
 
     @Override

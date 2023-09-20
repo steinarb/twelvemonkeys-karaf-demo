@@ -29,26 +29,6 @@ class ImageApiServletTest {
     final static ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    void testScanforplugins() throws Exception {
-        var imageService = mock(ImageService.class);
-        var jpegreaders = Arrays.asList("com.sun.imageio.plugins.jpeg.JPEGImageReader");
-        when(imageService.scanForImageioPlugins()).thenReturn(jpegreaders);
-        var logservice = new MockLogService();
-        var servlet = new ImageApiServlet();
-        servlet.setLogService(logservice);
-        servlet.setImageService(imageService);
-        servlet.activate();
-        var config = createServletConfigWithApplicationAndPackagenameForJerseyResources();
-        servlet.init(config);
-
-        var request = buildGetUrl("/image/scanforplugins");
-        var response = new MockHttpServletResponse();
-        servlet.service(request, response);
-
-        assertEquals(200, response.getStatus());
-    }
-
-    @Test
     void testGetMetadata() throws Exception {
         var imageService = mock(ImageService.class);
         var imageMetadata = ImageMetadata.with().status(200).lastModified(Date.from(Instant.ofEpochMilli(844453726000L))).contentType("image/jpeg").contentLength(71072).comment("My VFR 750F, in front of Polarsirkelsenteret.  Arctic Circle, Ranamunicipality, Northern Norway.").build();
@@ -67,13 +47,6 @@ class ImageApiServletTest {
         servlet.service(request, response);
 
         assertEquals(200, response.getStatus());
-    }
-
-
-    private MockHttpServletRequest buildGetUrl(String resource) {
-        MockHttpServletRequest request = buildRequest(resource);
-        request.setMethod("GET");
-        return request;
     }
 
     private MockHttpServletRequest buildPostUrl(String resource, Object body) throws Exception {

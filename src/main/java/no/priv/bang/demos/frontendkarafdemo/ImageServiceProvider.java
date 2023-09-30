@@ -90,6 +90,10 @@ public class ImageServiceProvider implements ImageService {
         return connectionFactory;
     }
 
+    public void setConnectionFactory(HttpConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
     public static Iterable<IIOMetadataNode> iterable(final NodeList nodeList) {
         return () -> new Iterator<IIOMetadataNode>() {
 

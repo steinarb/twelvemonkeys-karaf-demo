@@ -10,8 +10,6 @@ import java.util.stream.StreamSupport;
 
 import javax.imageio.ImageIO;
 import javax.imageio.spi.IIORegistry;
-import javax.imageio.spi.ImageInputStreamSpi;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

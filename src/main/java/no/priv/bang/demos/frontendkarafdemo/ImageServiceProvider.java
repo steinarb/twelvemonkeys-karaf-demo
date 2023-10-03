@@ -21,8 +21,9 @@ import org.osgi.service.log.Logger;
 import org.w3c.dom.NodeList;
 
 import com.twelvemonkeys.imageio.metadata.CompoundDirectory;
-import com.twelvemonkeys.imageio.metadata.exif.EXIFReader;
 import com.twelvemonkeys.imageio.metadata.jpeg.JPEG;
+import com.twelvemonkeys.imageio.metadata.tiff.TIFFReader;
+
 import static com.twelvemonkeys.imageio.metadata.jpeg.JPEGSegmentUtil.*;
 
 import no.priv.bang.demos.frontendkarafdemo.beans.ImageMetadata;
@@ -63,7 +64,7 @@ public class ImageServiceProvider implements ImageService {
                     exifSegment.stream().map(s -> s.data()).findFirst().ifPresent(exifData -> {
                             try {
                                 exifData.read();
-                                var exif = (CompoundDirectory) new EXIFReader().read(ImageIO.createImageInputStream(exifData));
+                                var exif = (CompoundDirectory) new TIFFReader().read(ImageIO.createImageInputStream(exifData));
                                 for (var entry : exif) {
                                     if (entry.getIdentifier().equals(306)) {
                                         var formatter = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss");

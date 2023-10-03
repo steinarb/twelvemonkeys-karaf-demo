@@ -55,7 +55,7 @@ public class ImageServiceProvider implements ImageService {
                             logger.info("reader class: {}", reader.getClass().getCanonicalName());
                             reader.setInput(input, true);
                             var metadata = reader.getImageMetadata(0);
-                            metadataBuilder.comment(findJfifComment(metadata));
+                            metadataBuilder.description(findJfifComment(metadata));
                         } finally {
                             reader.dispose();
                         }

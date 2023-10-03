@@ -31,7 +31,7 @@ class ImageApiServletTest {
     @Test
     void testGetMetadata() throws Exception {
         var imageService = mock(ImageService.class);
-        var imageMetadata = ImageMetadata.with().status(200).lastModified(Date.from(Instant.ofEpochMilli(844453726000L))).contentType("image/jpeg").contentLength(71072).comment("My VFR 750F, in front of Polarsirkelsenteret.  Arctic Circle, Ranamunicipality, Northern Norway.").build();
+        var imageMetadata = ImageMetadata.with().status(200).lastModified(Date.from(Instant.ofEpochMilli(844453726000L))).contentType("image/jpeg").contentLength(71072).description("My VFR 750F, in front of Polarsirkelsenteret.  Arctic Circle, Ranamunicipality, Northern Norway.").build();
         when(imageService.getMetadata(anyString())).thenReturn(imageMetadata);
         var logservice = new MockLogService();
         var servlet = new ImageApiServlet();

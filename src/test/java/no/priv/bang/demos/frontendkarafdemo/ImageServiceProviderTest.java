@@ -35,7 +35,7 @@ class ImageServiceProviderTest {
         var imageMetadata = provider.getMetadata("http://localhost/acirc1.jpg");
         assertNotNull(imageMetadata);
         assertEquals(new Date(lastModifiedTime), imageMetadata.getLastModified());
-        assertThat(imageMetadata.getComment()).startsWith("My VFR 750F");
+        assertThat(imageMetadata.getDescription()).startsWith("My VFR 750F");
     }
 
     @Test
@@ -57,7 +57,7 @@ class ImageServiceProviderTest {
         var imageMetadata = provider.getMetadata("http://localhost/CIMG0068.JPG");
         assertNotNull(imageMetadata);
         assertNotEquals(new Date(lastModifiedTime), imageMetadata.getLastModified());
-        assertThat(imageMetadata.getComment()).isNullOrEmpty();
+        assertThat(imageMetadata.getDescription()).isNullOrEmpty();
     }
 
 }

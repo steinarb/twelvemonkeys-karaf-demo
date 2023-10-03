@@ -22,9 +22,10 @@ class ImageServiceProviderTest {
         var logservice = new MockLogService();
         provider.setLogservice(logservice);
         var connectionFactory = mock(HttpConnectionFactory.class);
-        var imageFileAttributes = Files.readAttributes(Path.of(getClass().getClassLoader().getResource("CIMG0068.JPG").toURI()), BasicFileAttributes.class);
+        var imageFileName = "acirc1.jpg";
+        var imageFileAttributes = Files.readAttributes(Path.of(getClass().getClassLoader().getResource(imageFileName).toURI()), BasicFileAttributes.class);
         var lastModifiedTime = imageFileAttributes.lastModifiedTime().toMillis();
-        var inputstream = getClass().getClassLoader().getResourceAsStream("acirc1.jpg");
+        var inputstream = getClass().getClassLoader().getResourceAsStream(imageFileName);
         var connection = mock(HttpURLConnection.class);
         when(connection.getLastModified()).thenReturn(lastModifiedTime);
         when(connection.getInputStream()).thenReturn(inputstream);
@@ -43,9 +44,10 @@ class ImageServiceProviderTest {
         var logservice = new MockLogService();
         provider.setLogservice(logservice);
         var connectionFactory = mock(HttpConnectionFactory.class);
-        var imageFileAttributes = Files.readAttributes(Path.of(getClass().getClassLoader().getResource("CIMG0068.JPG").toURI()), BasicFileAttributes.class);
+        var imageFileName = "CIMG0068.JPG";
+        var imageFileAttributes = Files.readAttributes(Path.of(getClass().getClassLoader().getResource(imageFileName).toURI()), BasicFileAttributes.class);
         var lastModifiedTime = imageFileAttributes.lastModifiedTime().toMillis();
-        var inputstream = getClass().getClassLoader().getResourceAsStream("CIMG0068.JPG");
+        var inputstream = getClass().getClassLoader().getResourceAsStream(imageFileName);
         var connection = mock(HttpURLConnection.class);
         when(connection.getLastModified()).thenReturn(lastModifiedTime);
         when(connection.getInputStream()).thenReturn(inputstream);

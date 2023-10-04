@@ -60,4 +60,26 @@ class ImageServiceProviderTest {
         assertThat(imageMetadata.getDescription()).isNullOrEmpty();
     }
 
+    @Test
+    void testReadJpegWithDescriptionInExifMetadata() throws Exception {
+        var provider = new ImageServiceProvider();
+        var logservice = new MockLogService();
+        provider.setLogservice(logservice);
+        var connectionFactory = mock(HttpConnectionFactory.class);
+        var imageFileName = "CIMG0068_with_description.JPG";
+        var imageFileAttributes = Files.readAttributes(Path.of(getClass().getClassLoader().getResource(imageFileName).toURI()), BasicFileAttributes.class);
+        var lastModifiedTime = imageFileAttributes.lastModifiedTime().toMillis();
+        var inputstream = getClass().getClassLoader().getResourceAsStream(imageFileName);
+        var connection = mock(HttpURLConnection.class);
+        when(connection.getLastModified()).thenReturn(lastModifiedTime);
+        when(connection.getInputStream()).thenReturn(inputstream);
+        when(connectionFactory.connect(anyString())).thenReturn(connection);
+        provider.setConnectionFactory(connectionFactory);
+
+        var imageMetadata = provider.getMetadata("http://localhost/CIMG0068_with_description.JPG");
+        assertNotNull(imageMetadata);
+        assertNotEquals(new Date(lastModifiedTime), imageMetadata.getLastModified());
+        assertThat(imageMetadata.getDescription()).startsWith("Autumn leaves at Gålå");
+    }
+
 }

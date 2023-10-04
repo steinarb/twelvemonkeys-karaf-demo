@@ -32,6 +32,7 @@ import no.priv.bang.demos.frontendkarafdemo.beans.ImageMetadata;
 public class ImageServiceProvider implements ImageService {
 
     private static final int EXIF_DATETIME = 306;
+    private static final int EXIF_DESCRIPTION = 0x010e;
     private HttpConnectionFactory connectionFactory;
     private Logger logger;
 
@@ -72,6 +73,8 @@ public class ImageServiceProvider implements ImageService {
                                         exifDateTimeFormat.setTimeZone(TimeZone.getTimeZone("Europe/Oslo"));
                                         var datetime = exifDateTimeFormat.parse(entry.getValueAsString());
                                         metadataBuilder.lastModified(datetime);
+                                    } else if (entry.getIdentifier().equals(EXIF_DESCRIPTION)) {
+                                        metadataBuilder.description(entry.getValueAsString());
                                     }
                                 }
                             } catch (IOException e) {

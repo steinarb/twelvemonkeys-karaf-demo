@@ -35,6 +35,7 @@ class ImageServiceProviderTest {
         var imageMetadata = provider.getMetadata("http://localhost/acirc1.jpg");
         assertNotNull(imageMetadata);
         assertEquals(new Date(lastModifiedTime), imageMetadata.getLastModified());
+        assertThat(imageMetadata.getTitle()).isNullOrEmpty();
         assertThat(imageMetadata.getDescription()).startsWith("My VFR 750F");
     }
 
@@ -57,6 +58,7 @@ class ImageServiceProviderTest {
         var imageMetadata = provider.getMetadata("http://localhost/CIMG0068.JPG");
         assertNotNull(imageMetadata);
         assertNotEquals(new Date(lastModifiedTime), imageMetadata.getLastModified());
+        assertThat(imageMetadata.getTitle()).isNullOrEmpty();
         assertThat(imageMetadata.getDescription()).isNullOrEmpty();
     }
 
@@ -79,6 +81,7 @@ class ImageServiceProviderTest {
         var imageMetadata = provider.getMetadata("http://localhost/CIMG0068_with_description.JPG");
         assertNotNull(imageMetadata);
         assertNotEquals(new Date(lastModifiedTime), imageMetadata.getLastModified());
+        assertThat(imageMetadata.getTitle()).isNullOrEmpty();
         assertThat(imageMetadata.getDescription()).startsWith("Autumn leaves at Gålå");
     }
 

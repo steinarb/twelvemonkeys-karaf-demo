@@ -31,6 +31,7 @@ import no.priv.bang.demos.frontendkarafdemo.beans.ImageMetadata;
 @Component
 public class ImageServiceProvider implements ImageService {
 
+    private static final int EXIF_DATETIME = 306;
     private HttpConnectionFactory connectionFactory;
     private Logger logger;
 
@@ -66,10 +67,10 @@ public class ImageServiceProvider implements ImageService {
                                 exifData.read();
                                 var exif = (CompoundDirectory) new TIFFReader().read(ImageIO.createImageInputStream(exifData));
                                 for (var entry : exif) {
-                                    if (entry.getIdentifier().equals(306)) {
-                                        var formatter = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss");
-                                        formatter.setTimeZone(TimeZone.getTimeZone("Europe/Oslo"));
-                                        var datetime = formatter.parse(entry.getValueAsString());
+                                    if (entry.getIdentifier().equals(EXIF_DATETIME)) {
+                                        var exifDateTimeFormat = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss");
+                                        exifDateTimeFormat.setTimeZone(TimeZone.getTimeZone("Europe/Oslo"));
+                                        var datetime = exifDateTimeFormat.parse(entry.getValueAsString());
                                         metadataBuilder.lastModified(datetime);
                                     }
                                 }

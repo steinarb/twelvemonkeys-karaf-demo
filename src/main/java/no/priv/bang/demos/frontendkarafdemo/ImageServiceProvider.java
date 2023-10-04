@@ -74,7 +74,7 @@ public class ImageServiceProvider implements ImageService {
                                         var datetime = exifDateTimeFormat.parse(entry.getValueAsString());
                                         metadataBuilder.lastModified(datetime);
                                     } else if (entry.getIdentifier().equals(EXIF_DESCRIPTION)) {
-                                        metadataBuilder.description(entry.getValueAsString());
+                                        metadataBuilder.title(entry.getValueAsString());
                                     }
                                 }
                             } catch (IOException e) {

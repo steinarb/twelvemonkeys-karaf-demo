@@ -81,8 +81,8 @@ class ImageServiceProviderTest {
         var imageMetadata = provider.getMetadata("http://localhost/CIMG0068_with_description.JPG");
         assertNotNull(imageMetadata);
         assertNotEquals(new Date(lastModifiedTime), imageMetadata.getLastModified());
-        assertThat(imageMetadata.getTitle()).isNullOrEmpty();
-        assertThat(imageMetadata.getDescription()).startsWith("Autumn leaves at Gålå");
+        assertThat(imageMetadata.getTitle()).startsWith("Autumn leaves at Gålå");
+        assertThat(imageMetadata.getDescription()).isNullOrEmpty();
     }
 
 }

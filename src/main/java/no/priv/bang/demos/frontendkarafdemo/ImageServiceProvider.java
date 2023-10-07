@@ -5,8 +5,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.TimeZone;
 import java.util.stream.StreamSupport;
@@ -22,6 +24,7 @@ import org.w3c.dom.NodeList;
 
 import com.twelvemonkeys.imageio.metadata.CompoundDirectory;
 import com.twelvemonkeys.imageio.metadata.jpeg.JPEG;
+import com.twelvemonkeys.imageio.metadata.tiff.IFD;
 import com.twelvemonkeys.imageio.metadata.tiff.TIFFReader;
 
 import static com.twelvemonkeys.imageio.metadata.jpeg.JPEGSegmentUtil.*;
@@ -33,6 +36,8 @@ public class ImageServiceProvider implements ImageService {
 
     private static final int EXIF_DATETIME = 306;
     private static final int EXIF_DESCRIPTION = 0x010e;
+    private static final int EXIF_EXIF = 34665;
+    private static final int EXIF_USER_COMMENT = 37510;
     private HttpConnectionFactory connectionFactory;
     private Logger logger;
 
@@ -75,6 +80,15 @@ public class ImageServiceProvider implements ImageService {
                                         metadataBuilder.lastModified(datetime);
                                     } else if (entry.getIdentifier().equals(EXIF_DESCRIPTION)) {
                                         metadataBuilder.title(entry.getValueAsString());
+                                    } else if (entry.getIdentifier().equals(EXIF_EXIF)) {
+                                        var nestedExif = (IFD) entry.getValue();
+                                        for (var nestedEntry : nestedExif) {
+                                            if (nestedEntry.getIdentifier().equals(EXIF_USER_COMMENT)) {
+                                                var userCommentRaw = (byte[]) nestedEntry.getValue();
+                                                var splitUserComment = splitUserCommentInEncodingAndComment(userCommentRaw);
+                                                metadataBuilder.description(new String(splitUserComment.get(1), "UTF-8"));
+                                            }
+                                        }
                                     }
                                 }
                             } catch (IOException e) {
@@ -127,6 +141,12 @@ public class ImageServiceProvider implements ImageService {
 
     public void setConnectionFactory(HttpConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
+    }
+
+    List<byte[]> splitUserCommentInEncodingAndComment(byte[] userCommentRaw) {
+        var encoding = Arrays.copyOf(userCommentRaw, 8);
+        var comment = Arrays.copyOfRange(userCommentRaw, 8, userCommentRaw.length);
+        return Arrays.asList(encoding, comment);
     }
 
     public static Iterable<IIOMetadataNode> iterable(final NodeList nodeList) {

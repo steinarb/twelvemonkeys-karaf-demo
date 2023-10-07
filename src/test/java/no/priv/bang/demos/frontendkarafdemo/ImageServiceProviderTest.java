@@ -85,4 +85,38 @@ class ImageServiceProviderTest {
         assertThat(imageMetadata.getDescription()).isNullOrEmpty();
     }
 
+    @Test
+    void testReadJpegWithDescriptionAndUserCommentInExifMetadata() throws Exception {
+        var provider = new ImageServiceProvider();
+        var logservice = new MockLogService();
+        provider.setLogservice(logservice);
+        var connectionFactory = mock(HttpConnectionFactory.class);
+        var imageFileName = "CIMG0068_with_description_and_user_comment.JPG";
+        var imageFileAttributes = Files.readAttributes(Path.of(getClass().getClassLoader().getResource(imageFileName).toURI()), BasicFileAttributes.class);
+        var lastModifiedTime = imageFileAttributes.lastModifiedTime().toMillis();
+        var inputstream = getClass().getClassLoader().getResourceAsStream(imageFileName);
+        var connection = mock(HttpURLConnection.class);
+        when(connection.getLastModified()).thenReturn(lastModifiedTime);
+        when(connection.getInputStream()).thenReturn(inputstream);
+        when(connectionFactory.connect(anyString())).thenReturn(connection);
+        provider.setConnectionFactory(connectionFactory);
+
+        var imageMetadata = provider.getMetadata("http://localhost/CIMG0068_with_description_and_user_comment.JPG");
+        assertNotNull(imageMetadata);
+        assertNotEquals(new Date(lastModifiedTime), imageMetadata.getLastModified());
+        assertThat(imageMetadata.getTitle()).startsWith("Autumn leaves at Gålå");
+        assertThat(imageMetadata.getDescription()).startsWith("Pretty red leaves");
+    }
+
+    @Test
+    void testSplitUserCommentInEncodingAndComment() throws Exception {
+        byte[] userCommentRaw = {65, 83, 67, 73, 73, 0, 0, 0, 80, 114, 101, 116, 116, 121, 32, 114, 101, 100, 32, 108, 101, 97, 118, 101, 115};
+        var provider = new ImageServiceProvider();
+        var splitUserComment = provider.splitUserCommentInEncodingAndComment(userCommentRaw);
+        var encoding = new String(splitUserComment.get(0), "UTF-8");
+        var comment = new String(splitUserComment.get(1), "UTF-8");
+        assertThat(encoding).startsWith("ASCII");
+        assertThat(comment).isEqualTo("Pretty red leaves");
+    }
+
 }

@@ -6,7 +6,7 @@ import status from './statusReducer';
 import lastModified from './lastModifiedReducer';
 import contentType from './contentTypeReducer';
 import contentLength from './contentLengthReducer';
-import comment from './commentReducer';
+import description from './descriptionReducer';
 
 export default (history) => combineReducers({
     router: connectRouter(history),
@@ -16,5 +16,5 @@ export default (history) => combineReducers({
     lastModified,
     contentType,
     contentLength,
-    comment,
+    description,
 });

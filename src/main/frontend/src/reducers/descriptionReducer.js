@@ -3,8 +3,8 @@ import {
     IMAGE_METADATA_RECEIVE,
 } from '../reduxactions';
 
-const commentReducer = createReducer('', {
-    [IMAGE_METADATA_RECEIVE]: (state, action) => action.payload.comment || '',
+const descriptionReducer = createReducer('', {
+    [IMAGE_METADATA_RECEIVE]: (state, action) => action.payload.description || '',
 });
 
-export default commentReducer;
+export default descriptionReducer;

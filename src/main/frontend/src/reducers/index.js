@@ -6,6 +6,7 @@ import status from './statusReducer';
 import lastModified from './lastModifiedReducer';
 import contentType from './contentTypeReducer';
 import contentLength from './contentLengthReducer';
+import title from './titleReducer';
 import description from './descriptionReducer';
 
 export default (history) => combineReducers({
@@ -16,5 +17,6 @@ export default (history) => combineReducers({
     lastModified,
     contentType,
     contentLength,
+    title,
     description,
 });

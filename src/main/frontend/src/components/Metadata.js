@@ -30,6 +30,14 @@ export default function Metadata() {
             <p>Content type: <input id="contentType" type="text" value={contentType} /></p>
             <p>Content length: <input id="contentLength" type="text" value={contentLength} /></p>
             <p>Comment: <input id="comment" type="text" value={comment} /></p>
+            <h1>Some sample images</h1>
+            <ol>
+                <li><a href="https://www.bang.priv.no/sb/pics/moto/vfr96/acirc1.jpg">A 1996 vintage JFIF without EXIM metadata and with a comment in the metadata (TwelveMonkeys finds the comment) (created by cjpeg)</a></li>
+                <li><a href="https://www.bang.priv.no/bilder/test/CIMG0068.JPG">A picture taken by a Casio Exilim II digital camera in October 2005 (autumn leaves at Gålå)</a></li>
+                <li><a href="https://www.bang.priv.no/bilder/test/CIMG0068_with_description.JPG">The Gålå autumn picture with an ImageDescription tag added by exiftool (TwelveMonkeys EXIFReader finds the tag)</a></li>
+                <li><a href="https://www.bang.priv.no/bilder/test/CIMG0068_with_description_and_title.JPG">The Gålå autumn picture with an ImageDescription and Title tag added by exiftool (this is the tag that caused this issue)</a></li>
+                <li><a href="https://www.bang.priv.no/bilder/test/CIMG0068_with_description_and_user_comment.JPG">The Gålå autumn picture with an ImageDescription and UserComment tag added by exiftool (I still haven&apos;t found the UserComment tag with TwelveMonkeys but with your comments above I have hopes I eventually will. I think I found this in the source code...?)</a></li>
+            </ol>
         </div>
     );
 }

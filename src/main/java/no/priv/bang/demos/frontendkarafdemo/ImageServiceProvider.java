@@ -3,6 +3,7 @@ package no.priv.bang.demos.frontendkarafdemo;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -86,7 +87,7 @@ public class ImageServiceProvider implements ImageService {
                                             if (nestedEntry.getIdentifier().equals(EXIF_USER_COMMENT)) {
                                                 var userCommentRaw = (byte[]) nestedEntry.getValue();
                                                 var splitUserComment = splitUserCommentInEncodingAndComment(userCommentRaw);
-                                                metadataBuilder.description(new String(splitUserComment.get(1), "UTF-8"));
+                                                metadataBuilder.description(new String(splitUserComment.get(1), StandardCharsets.UTF_8));
                                             }
                                         }
                                     }

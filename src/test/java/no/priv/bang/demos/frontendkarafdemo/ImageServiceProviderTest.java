@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -106,6 +107,58 @@ class ImageServiceProviderTest {
         assertNotEquals(new Date(lastModifiedTime), imageMetadata.getLastModified());
         assertThat(imageMetadata.getTitle()).startsWith("Autumn leaves at Gålå");
         assertThat(imageMetadata.getDescription()).startsWith("Pretty red leaves");
+    }
+
+    @Test
+    void testGetMetadataWithNonExistingUrl() throws Exception {
+        var provider = new ImageServiceProvider();
+
+        var e = assertThrows(RuntimeException.class, () -> provider.getMetadata("http://localhost/CIMG0068_with_description_and_user_comment.JPG"));
+        assertThat(e.getMessage()).startsWith("Error when reading image metadata for");
+    }
+
+    @Test
+    void testGetMetadataWithNullImageUrl() throws Exception {
+        var provider = new ImageServiceProvider();
+
+        var metadata = provider.getMetadata(null);
+        assertNull(metadata);
+    }
+
+    @Test
+    void testGetMetadataWithEmptyImageUrl() throws Exception {
+        var provider = new ImageServiceProvider();
+
+        var metadata = provider.getMetadata("");
+        assertNull(metadata);
+    }
+
+    @Test
+    void testGetMetadataWithHttpConnectionThatThrowsIOException() throws Exception {
+        var provider = new ImageServiceProvider();
+        var logservice = new MockLogService();
+        provider.setLogservice(logservice);
+        var connectionFactory = mock(HttpConnectionFactory.class);
+        var connection = mock(HttpURLConnection.class);
+        when(connection.getInputStream()).thenThrow(IOException.class);
+        when(connectionFactory.connect(anyString())).thenReturn(connection);
+        provider.setConnectionFactory(connectionFactory);
+
+        var e = assertThrows(RuntimeException.class, () -> provider.getMetadata("http://localhost/CIMG0068_with_description_and_user_comment.JPG"));
+        assertThat(e.getMessage()).startsWith("Error when reading image metadata for");
+    }
+
+    @Test
+    void testGetMetadataWithIOExceptionWhenConnectingWithHttp() throws Exception {
+        var provider = new ImageServiceProvider();
+        var logservice = new MockLogService();
+        provider.setLogservice(logservice);
+        var connectionFactory = mock(HttpConnectionFactory.class);
+        when(connectionFactory.connect(anyString())).thenThrow(IOException.class);
+        provider.setConnectionFactory(connectionFactory);
+
+        var e = assertThrows(RuntimeException.class, () -> provider.getMetadata("http://localhost/CIMG0068_with_description_and_user_comment.JPG"));
+        assertThat(e.getMessage()).startsWith("Error when reading metadata for");
     }
 
     @Test

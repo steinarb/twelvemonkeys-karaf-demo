@@ -5,14 +5,20 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collections;
 import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 
+import com.twelvemonkeys.imageio.metadata.Entry;
+import com.twelvemonkeys.imageio.metadata.jpeg.JPEGSegment;
+
+import no.priv.bang.demos.frontendkarafdemo.beans.ImageMetadata;
 import no.priv.bang.osgi.service.mocks.logservice.MockLogService;
 
 class ImageServiceProviderTest {
@@ -159,6 +165,33 @@ class ImageServiceProviderTest {
 
         var e = assertThrows(RuntimeException.class, () -> provider.getMetadata("http://localhost/CIMG0068_with_description_and_user_comment.JPG"));
         assertThat(e.getMessage()).startsWith("Error when reading metadata for");
+    }
+
+    @Test
+    void testReadExifImageMetadataWithIOException() throws Exception {
+        var provider = new ImageServiceProvider();
+        var imageUrl = "http://localhost/image.jpg";
+        var builder = ImageMetadata.with();
+        var jpegSegment = mock(JPEGSegment.class);
+        var exifData = mock(InputStream.class);
+        when(exifData.read()).thenThrow(IOException.class);
+        when(jpegSegment.data()).thenReturn(exifData);
+        var exifSegment = Collections.singletonList(jpegSegment);
+
+        var e = assertThrows(RuntimeException.class, () -> provider.readExifImageMetadata(imageUrl, builder, exifSegment));
+        assertThat(e.getMessage()).startsWith("Error reading EXIF data of");
+    }
+
+    @Test
+    void testExtractExifDatetimeWithParseException() {
+        var provider = new ImageServiceProvider();
+        var builder = ImageMetadata.with();
+        var entry = mock(Entry.class);
+        when(entry.getValueAsString()).thenReturn("not a parsable date");
+        var imageUrl = "http://localhost/image.jpg";
+
+        var e = assertThrows(RuntimeException.class, () -> provider.extractExifDatetime(builder, entry, imageUrl));
+        assertThat(e.getMessage()).startsWith("Error parsing EXIF 306/DateTime entry of");
     }
 
     @Test

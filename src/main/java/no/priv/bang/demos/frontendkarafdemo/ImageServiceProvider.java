@@ -24,21 +24,24 @@ import org.osgi.service.log.Logger;
 import org.w3c.dom.NodeList;
 
 import com.twelvemonkeys.imageio.metadata.CompoundDirectory;
+import com.twelvemonkeys.imageio.metadata.Entry;
 import com.twelvemonkeys.imageio.metadata.jpeg.JPEG;
+import com.twelvemonkeys.imageio.metadata.jpeg.JPEGSegment;
 import com.twelvemonkeys.imageio.metadata.tiff.IFD;
 import com.twelvemonkeys.imageio.metadata.tiff.TIFFReader;
 
 import static com.twelvemonkeys.imageio.metadata.jpeg.JPEGSegmentUtil.*;
 
 import no.priv.bang.demos.frontendkarafdemo.beans.ImageMetadata;
+import no.priv.bang.demos.frontendkarafdemo.beans.ImageMetadata.ImageMetadataBuilder;
 
 @Component
 public class ImageServiceProvider implements ImageService {
 
-    private static final int EXIF_DATETIME = 306;
-    private static final int EXIF_DESCRIPTION = 0x010e;
-    private static final int EXIF_EXIF = 34665;
-    private static final int EXIF_USER_COMMENT = 37510;
+    static final int EXIF_DATETIME = 306;
+    static final int EXIF_DESCRIPTION = 0x010e;
+    static final int EXIF_EXIF = 34665;
+    static final int EXIF_USER_COMMENT = 37510;
     private HttpConnectionFactory connectionFactory;
     private Logger logger;
 
@@ -50,68 +53,91 @@ public class ImageServiceProvider implements ImageService {
     @Override
     public ImageMetadata getMetadata(String imageUrl) {
         if (imageUrl != null && !imageUrl.isEmpty()) {
-            try {
-                final var metadataBuilder = ImageMetadata.with();
-                var connection = getConnectionFactory().connect(imageUrl);
-                connection.setRequestMethod("GET");
-                try(var input = ImageIO.createImageInputStream(connection.getInputStream())) {
-                    metadataBuilder.lastModified(new Date(connection.getLastModified()));
-                    var readers = ImageIO.getImageReaders(input);
-                    if (readers.hasNext()) {
-                        var reader = readers.next();
-                        try {
-                            logger.info("reader class: {}", reader.getClass().getCanonicalName());
-                            reader.setInput(input, true);
-                            var metadata = reader.getImageMetadata(0);
-                            metadataBuilder.description(findJfifComment(metadata));
-                        } finally {
-                            reader.dispose();
-                        }
-                    }
-                    var exifSegment = readSegments(input, JPEG.APP1, "Exif");
-                    exifSegment.stream().map(s -> s.data()).findFirst().ifPresent(exifData -> {
-                            try {
-                                exifData.read();
-                                var exif = (CompoundDirectory) new TIFFReader().read(ImageIO.createImageInputStream(exifData));
-                                for (var entry : exif) {
-                                    if (entry.getIdentifier().equals(EXIF_DATETIME)) {
-                                        var exifDateTimeFormat = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss");
-                                        exifDateTimeFormat.setTimeZone(TimeZone.getTimeZone("Europe/Oslo"));
-                                        var datetime = exifDateTimeFormat.parse(entry.getValueAsString());
-                                        metadataBuilder.lastModified(datetime);
-                                    } else if (entry.getIdentifier().equals(EXIF_DESCRIPTION)) {
-                                        metadataBuilder.title(entry.getValueAsString());
-                                    } else if (entry.getIdentifier().equals(EXIF_EXIF)) {
-                                        var nestedExif = (IFD) entry.getValue();
-                                        for (var nestedEntry : nestedExif) {
-                                            if (nestedEntry.getIdentifier().equals(EXIF_USER_COMMENT)) {
-                                                var userCommentRaw = (byte[]) nestedEntry.getValue();
-                                                var splitUserComment = splitUserCommentInEncodingAndComment(userCommentRaw);
-                                                metadataBuilder.description(new String(splitUserComment.get(1), StandardCharsets.UTF_8));
-                                            }
-                                        }
-                                    }
-                                }
-                            } catch (IOException e) {
-                                throw new RuntimeException(String.format("Error reading EXIF data of %s",  imageUrl), e);
-                            } catch (ParseException e) {
-                                throw new RuntimeException(String.format("Error parsing EXIF 306/DateTime entry of %s",  imageUrl), e);
-                            }
-                        });
-                } catch (IOException e) {
-                    throw new RuntimeException(String.format("Error when reading image metadata for %s",  imageUrl), e);
-                }
+            return fetchImageWithHttpAndReadImageMetadata(imageUrl);
+        }
 
-                return metadataBuilder
-                    .status(connection.getResponseCode())
-                    .contentType(connection.getContentType())
-                    .contentLength(getAndParseContentLengthHeader(connection))
-                    .build();
-            } catch (IOException e) {
-                throw new RuntimeException(String.format("Error when reading metadata for %s",  imageUrl), e);
+        return null;
+    }
+
+    private ImageMetadata fetchImageWithHttpAndReadImageMetadata(String imageUrl) {
+        try {
+            final var metadataBuilder = ImageMetadata.with();
+            var connection = getConnectionFactory().connect(imageUrl);
+            connection.setRequestMethod("GET");
+            readAndParseImageMetadata(imageUrl, metadataBuilder, connection);
+
+            return metadataBuilder
+                .status(connection.getResponseCode())
+                .contentType(connection.getContentType())
+                .contentLength(getAndParseContentLengthHeader(connection))
+                .build();
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("Error when reading metadata for %s",  imageUrl), e);
+        }
+    }
+
+    private void readAndParseImageMetadata(String imageUrl, final ImageMetadataBuilder metadataBuilder, HttpURLConnection connection) {
+        try(var input = ImageIO.createImageInputStream(connection.getInputStream())) {
+            metadataBuilder.lastModified(new Date(connection.getLastModified()));
+            var readers = ImageIO.getImageReaders(input);
+            if (readers.hasNext()) {
+                var reader = readers.next();
+                try {
+                    logger.info("reader class: {}", reader.getClass().getCanonicalName());
+                    reader.setInput(input, true);
+                    var metadata = reader.getImageMetadata(0);
+                    metadataBuilder.description(findJfifComment(metadata));
+                } finally {
+                    reader.dispose();
+                }
+            }
+            var exifSegment = readSegments(input, JPEG.APP1, "Exif");
+            readExifImageMetadata(imageUrl, metadataBuilder, exifSegment);
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("Error when reading image metadata for %s",  imageUrl), e);
+        }
+    }
+
+    void readExifImageMetadata(String imageUrl, final ImageMetadataBuilder metadataBuilder, List<JPEGSegment> exifSegment) throws IOException {
+        exifSegment.stream().map(s -> s.data()).findFirst().ifPresent(exifData -> {
+                try {
+                    exifData.read();
+                    var exif = (CompoundDirectory) new TIFFReader().read(ImageIO.createImageInputStream(exifData));
+                    extractMetadataFromExifTags(metadataBuilder, exif, imageUrl);
+                } catch (IOException e) {
+                    throw new RuntimeException(String.format("Error reading EXIF data of %s",  imageUrl), e);
+                }
+            });
+    }
+
+    private void extractMetadataFromExifTags(final ImageMetadataBuilder metadataBuilder, CompoundDirectory exif, String imageUrl) {
+        for (var entry : exif) {
+            if (entry.getIdentifier().equals(EXIF_DATETIME)) {
+                extractExifDatetime(metadataBuilder, entry, imageUrl);
+            } else if (entry.getIdentifier().equals(EXIF_DESCRIPTION)) {
+                metadataBuilder.title(entry.getValueAsString());
+            } else if (entry.getIdentifier().equals(EXIF_EXIF)) {
+                var nestedExif = (IFD) entry.getValue();
+                for (var nestedEntry : nestedExif) {
+                    if (nestedEntry.getIdentifier().equals(EXIF_USER_COMMENT)) {
+                        var userCommentRaw = (byte[]) nestedEntry.getValue();
+                        var splitUserComment = splitUserCommentInEncodingAndComment(userCommentRaw);
+                        metadataBuilder.description(new String(splitUserComment.get(1), StandardCharsets.UTF_8));
+                    }
+                }
             }
         }
-        return null;
+    }
+
+    void extractExifDatetime(final ImageMetadataBuilder metadataBuilder, Entry entry, String imageUrl) {
+        try {
+            var exifDateTimeFormat = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss");
+            exifDateTimeFormat.setTimeZone(TimeZone.getTimeZone("Europe/Oslo"));
+            var datetime = exifDateTimeFormat.parse(entry.getValueAsString());
+            metadataBuilder.lastModified(datetime);
+        } catch (ParseException e) {
+            throw new RuntimeException(String.format("Error parsing EXIF 306/DateTime entry of %s",  imageUrl), e);
+        }
     }
 
     private String findJfifComment(IIOMetadata metadata) {

@@ -41,9 +41,9 @@ class ImageServiceProviderTest {
 
         var imageMetadata = provider.getMetadata("http://localhost/acirc1.jpg");
         assertNotNull(imageMetadata);
-        assertEquals(new Date(lastModifiedTime), imageMetadata.getLastModified());
-        assertThat(imageMetadata.getTitle()).isNullOrEmpty();
-        assertThat(imageMetadata.getDescription()).startsWith("My VFR 750F");
+        assertEquals(new Date(lastModifiedTime), imageMetadata.lastModified());
+        assertThat(imageMetadata.title()).isNullOrEmpty();
+        assertThat(imageMetadata.description()).startsWith("My VFR 750F");
     }
 
     @Test
@@ -64,9 +64,9 @@ class ImageServiceProviderTest {
 
         var imageMetadata = provider.getMetadata("http://localhost/CIMG0068.JPG");
         assertNotNull(imageMetadata);
-        assertNotEquals(new Date(lastModifiedTime), imageMetadata.getLastModified());
-        assertThat(imageMetadata.getTitle()).isNullOrEmpty();
-        assertThat(imageMetadata.getDescription()).isNullOrEmpty();
+        assertNotEquals(new Date(lastModifiedTime), imageMetadata.lastModified());
+        assertThat(imageMetadata.title()).isNullOrEmpty();
+        assertThat(imageMetadata.description()).isNullOrEmpty();
     }
 
     @Test
@@ -87,9 +87,9 @@ class ImageServiceProviderTest {
 
         var imageMetadata = provider.getMetadata("http://localhost/CIMG0068_with_description.JPG");
         assertNotNull(imageMetadata);
-        assertNotEquals(new Date(lastModifiedTime), imageMetadata.getLastModified());
-        assertThat(imageMetadata.getTitle()).startsWith("Autumn leaves at Gålå");
-        assertThat(imageMetadata.getDescription()).isNullOrEmpty();
+        assertNotEquals(new Date(lastModifiedTime), imageMetadata.lastModified());
+        assertThat(imageMetadata.title()).startsWith("Autumn leaves at Gålå");
+        assertThat(imageMetadata.description()).isNullOrEmpty();
     }
 
     @Test
@@ -110,9 +110,9 @@ class ImageServiceProviderTest {
 
         var imageMetadata = provider.getMetadata("http://localhost/CIMG0068_with_description_and_user_comment.JPG");
         assertNotNull(imageMetadata);
-        assertNotEquals(new Date(lastModifiedTime), imageMetadata.getLastModified());
-        assertThat(imageMetadata.getTitle()).startsWith("Autumn leaves at Gålå");
-        assertThat(imageMetadata.getDescription()).startsWith("Pretty red leaves");
+        assertNotEquals(new Date(lastModifiedTime), imageMetadata.lastModified());
+        assertThat(imageMetadata.title()).startsWith("Autumn leaves at Gålå");
+        assertThat(imageMetadata.description()).startsWith("Pretty red leaves");
     }
 
     @Test

@@ -22,7 +22,7 @@ public class ImageResource {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     public ImageMetadata getMetadata(ImageRequest imageRequest) {
-        return imageService.getMetadata(imageRequest.getUrl());
+        return imageService.getMetadata(imageRequest.url());
     }
 
 }

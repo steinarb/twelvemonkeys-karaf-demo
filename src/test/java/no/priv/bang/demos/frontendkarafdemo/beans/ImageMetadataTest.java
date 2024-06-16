@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Steinar Bang
+ * Copyright 2020-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,23 +40,23 @@ class ImageMetadataTest {
             .title(title)
             .description(description)
             .build();
-        assertEquals(status, bean.getStatus());
-        assertEquals(lastModified, bean.getLastModified());
-        assertEquals(contentType, bean.getContentType());
-        assertEquals(contentLength, bean.getContentLength());
-        assertThat(bean.getTitle()).isEqualTo(title);
-        assertThat(bean.getDescription()).isEqualTo(description);
+        assertEquals(status, bean.status());
+        assertEquals(lastModified, bean.lastModified());
+        assertEquals(contentType, bean.contentType());
+        assertEquals(contentLength, bean.contentLength());
+        assertThat(bean.title()).isEqualTo(title);
+        assertThat(bean.description()).isEqualTo(description);
     }
 
     @Test
     void testCreateNoArgsConstructor() {
         ImageMetadata bean = ImageMetadata.with().build();
-        assertEquals(0, bean.getStatus());
-        assertNull(bean.getLastModified());
-        assertNull(bean.getContentType());
-        assertEquals(0, bean.getContentLength());
-        assertNull(bean.getTitle());
-        assertNull(bean.getDescription());
+        assertEquals(0, bean.status());
+        assertNull(bean.lastModified());
+        assertNull(bean.contentType());
+        assertEquals(0, bean.contentLength());
+        assertNull(bean.title());
+        assertNull(bean.description());
     }
 
 }

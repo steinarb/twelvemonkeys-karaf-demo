@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Steinar Bang
+ * Copyright 2020-2024 Steinar Bang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,14 +27,14 @@ public class ImageRequest extends Immutable { // NOSONAR Immutable handles added
         return url;
     }
 
-    public static ImageRequestBuilder with() {
-        return new ImageRequestBuilder();
+    public static Builder with() {
+        return new Builder();
     }
 
-    public static class ImageRequestBuilder {
+    public static class Builder {
         private String url;
 
-        private ImageRequestBuilder() {}
+        private Builder() {}
 
         public ImageRequest build() {
             ImageRequest imageRequest = new ImageRequest();
@@ -42,7 +42,7 @@ public class ImageRequest extends Immutable { // NOSONAR Immutable handles added
             return imageRequest;
         }
 
-        public ImageRequestBuilder url(String url) {
+        public Builder url(String url) {
             this.url = url;
             return this;
         }

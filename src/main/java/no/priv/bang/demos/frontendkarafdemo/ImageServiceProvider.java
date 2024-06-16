@@ -33,7 +33,7 @@ import com.twelvemonkeys.imageio.metadata.tiff.TIFFReader;
 import static com.twelvemonkeys.imageio.metadata.jpeg.JPEGSegmentUtil.*;
 
 import no.priv.bang.demos.frontendkarafdemo.beans.ImageMetadata;
-import no.priv.bang.demos.frontendkarafdemo.beans.ImageMetadata.ImageMetadataBuilder;
+import no.priv.bang.demos.frontendkarafdemo.beans.ImageMetadata.Builder;
 
 @Component
 public class ImageServiceProvider implements ImageService {
@@ -76,7 +76,7 @@ public class ImageServiceProvider implements ImageService {
         }
     }
 
-    private void readAndParseImageMetadata(String imageUrl, final ImageMetadataBuilder metadataBuilder, HttpURLConnection connection) {
+    private void readAndParseImageMetadata(String imageUrl, final Builder metadataBuilder, HttpURLConnection connection) {
         try(var input = ImageIO.createImageInputStream(connection.getInputStream())) {
             metadataBuilder.lastModified(new Date(connection.getLastModified()));
             var readers = ImageIO.getImageReaders(input);
@@ -98,7 +98,7 @@ public class ImageServiceProvider implements ImageService {
         }
     }
 
-    void readExifImageMetadata(String imageUrl, final ImageMetadataBuilder metadataBuilder, List<JPEGSegment> exifSegment) throws IOException {
+    void readExifImageMetadata(String imageUrl, final Builder metadataBuilder, List<JPEGSegment> exifSegment) throws IOException {
         exifSegment.stream().map(s -> s.data()).findFirst().ifPresent(exifData -> {
                 try {
                     exifData.read();
@@ -110,7 +110,7 @@ public class ImageServiceProvider implements ImageService {
             });
     }
 
-    private void extractMetadataFromExifTags(final ImageMetadataBuilder metadataBuilder, CompoundDirectory exif, String imageUrl) {
+    private void extractMetadataFromExifTags(final Builder metadataBuilder, CompoundDirectory exif, String imageUrl) {
         for (var entry : exif) {
             if (entry.getIdentifier().equals(EXIF_DATETIME)) {
                 extractExifDatetime(metadataBuilder, entry, imageUrl);
@@ -129,7 +129,7 @@ public class ImageServiceProvider implements ImageService {
         }
     }
 
-    void extractExifDatetime(final ImageMetadataBuilder metadataBuilder, Entry entry, String imageUrl) {
+    void extractExifDatetime(final Builder metadataBuilder, Entry entry, String imageUrl) {
         try {
             var exifDateTimeFormat = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss");
             exifDateTimeFormat.setTimeZone(TimeZone.getTimeZone("Europe/Oslo"));

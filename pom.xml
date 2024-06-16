@@ -11,7 +11,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <twelvemonkeys.version>3.10.0</twelvemonkeys.version>
         <maven.bundle.plugin.version>5.1.9</maven.bundle.plugin.version>
-        <karaf.version>4.4.4</karaf.version>
+        <karaf.version>4.4.6</karaf.version>
         <karaf-feature-name>${project.artifactId}</karaf-feature-name>
         <Bundle-SymbolicName>no.priv.bang.demos.${project.artifactId}</Bundle-SymbolicName>
         <jersey-feature.version>1.9.6</jersey-feature.version>

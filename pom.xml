@@ -9,7 +9,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <twelvemonkeys.version>3.13.1</twelvemonkeys.version>
+        <twelvemonkeys.version>3.14.0</twelvemonkeys.version>
         <maven.bundle.plugin.version>6.0.2</maven.bundle.plugin.version>
         <karaf.version>4.4.11</karaf.version>
         <karaf-feature-name>${project.artifactId}</karaf-feature-name>
